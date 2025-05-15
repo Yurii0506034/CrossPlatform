@@ -1,18 +1,21 @@
+import java.time.LocalDate;  // Імпортуємо LocalDate
 import java.time.LocalDateTime;
 
 public class Task {
     private static int counter = 1;
-
     private int id;
     private String title;
     private String description;
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;  // Замість LocalDateTime використовуємо LocalDate
 
-    public Task(String title, String description, LocalDateTime dueDate) {
+    public Task(String title, String description, LocalDate dueDate) {
         this.id = counter++;
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
+    }
+
+    public Task(String title, String description, LocalDateTime of) {
     }
 
     public int getId() {
@@ -23,33 +26,27 @@ public class Task {
         return title;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public LocalDateTime getDueDate() {
-        return dueDate;
-    }
-
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setDueDate(LocalDateTime dueDate) {
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
-    @Override
-    public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", dueDate=" + dueDate +
-                '}';
+    public static void setCounter(int counter) {
+        Task.counter = counter;
     }
 }

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/laboratorna1.iml" filepath="$PROJECT_DIR$/laboratorna1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CrossPlatform.iml" filepath="$PROJECT_DIR$/CrossPlatform.iml" />
     </modules>
   </component>
 </project>
