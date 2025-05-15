@@ -1,96 +1,102 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
-import java.time.LocalDateTime;  // Додайте цей імпорт
 
 public class MainApp {
 
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final TaskManager taskManager = new TaskManager();
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("Меню:");
-            System.out.println("1. Створити");
-            System.out.println("2. Видалити");
-            System.out.println("3. Зчитати");
-            System.out.println("4. Оновити");
-            System.out.println("5. Пошук");
-            System.out.println("6. Сортування");
-            System.out.println("7. Вихід");
+            System.out.println("\nМеню:");
+            System.out.println("1. Створити завдання");
+            System.out.println("2. Видалити завдання");
+            System.out.println("3. Зчитати всі завдання");
+            System.out.println("4. Оновити завдання");
+            System.out.println("5. Вихід");
+            System.out.print("Виберіть опцію: ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine();  // Щоб захопити новий рядок після введення числа
+            scanner.nextLine(); // очистка
 
             switch (choice) {
-                case 1:
-                    createItem(scanner);
-                    break;
-                case 2:
-                    deleteItem(scanner);
-                    break;
-                case 3:
-                    readItems();
-                    break;
-                case 4:
-                    updateItem(scanner);
-                    break;
-                case 5:
-                    searchItems(scanner);
-                    break;
-                case 6:
-                    sortItems();
-                    break;
-                case 7:
-                    System.out.println("Вихід з програми...");
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println("Невірний вибір.");
+                case 1 -> createTask();
+                case 2 -> deleteTask();
+                case 3 -> readTasks();
+                case 4 -> updateTask();
+                case 5 -> {
+                    System.out.println("Вихід...");
+                    return;
+                }
+                default -> System.out.println("Невірний вибір.");
             }
         }
     }
 
-    private static void createItem(Scanner scanner) {
-        System.out.println("Введіть назву завдання:");
+    private static void createTask() {
+        System.out.print("Назва: ");
         String title = scanner.nextLine();
-        System.out.println("Введіть опис завдання:");
+
+        System.out.print("Опис: ");
         String description = scanner.nextLine();
-        System.out.println("Введіть дату виконання (yyyy-MM-dd HH:mm):");
-        String dueDateString = scanner.nextLine();
-        // Створення завдання
-        Task task = new Task(title, description, LocalDateTime.parse(dueDateString));  // Використовуємо LocalDateTime
-        System.out.println("Завдання створено: " + task);
+
+        System.out.print("Дата та час (yyyy-MM-dd HH:mm): ");
+        String dateStr = scanner.nextLine();
+
+        try {
+            LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
+            Task task = new Task(title, description, dateTime);
+            taskManager.addTask(task);
+            System.out.println("Завдання створено!");
+        } catch (Exception e) {
+            System.out.println("Невірний формат дати.");
+        }
     }
 
-    private static void deleteItem(Scanner scanner) {
-        // Реалізація видалення завдання
-        System.out.println("Введіть ID завдання для видалення:");
+    private static void deleteTask() {
+        System.out.print("ID завдання для видалення: ");
         int id = scanner.nextInt();
-        System.out.println("Завдання з ID " + id + " видалено.");
+        scanner.nextLine();
+
+        boolean deleted = taskManager.deleteTask(id);
+        if (deleted) {
+            System.out.println("Завдання видалено.");
+        } else {
+            System.out.println("Завдання з таким ID не знайдено.");
+        }
     }
 
-    private static void readItems() {
-        // Реалізація зчитування завдань
-        System.out.println("Зчитування всіх завдань...");
+    private static void readTasks() {
+        var tasks = taskManager.getAllTasks();
+        if (tasks.isEmpty()) {
+            System.out.println("Список порожній.");
+        } else {
+            System.out.println("Список завдань:");
+            for (Task task : tasks) {
+                System.out.println(task);
+            }
+        }
     }
 
-    private static void updateItem(Scanner scanner) {
-        // Реалізація оновлення завдання
-        System.out.println("Введіть ID завдання для оновлення:");
+    private static void updateTask() {
+        System.out.print("ID завдання для оновлення: ");
         int id = scanner.nextInt();
-        scanner.nextLine(); // Споживаємо новий рядок
-        System.out.println("Введіть нову назву завдання:");
-        String title = scanner.nextLine();
-        System.out.println("Завдання оновлено: " + title);
-    }
+        scanner.nextLine();
 
-    private static void searchItems(Scanner scanner) {
-        // Реалізація пошуку завдання
-        System.out.println("Введіть назву для пошуку:");
-        String searchQuery = scanner.nextLine();
-        System.out.println("Пошук за запитом: " + searchQuery);
-    }
+        System.out.print("Нова назва: ");
+        String newTitle = scanner.nextLine();
 
-    private static void sortItems() {
-        // Реалізація сортування
-        System.out.println("Завдання відсортовані.");
+        System.out.print("Новий опис: ");
+        String newDesc = scanner.nextLine();
+
+        boolean updated = taskManager.updateTask(id, newTitle, newDesc);
+        if (updated) {
+            System.out.println("Завдання оновлено.");
+        } else {
+            System.out.println("Завдання не знайдено.");
+        }
     }
 }
