@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class TaskManager {
@@ -33,5 +34,18 @@ public class TaskManager {
             return true;
         }
         return false;
+    }
+
+    // 🔽 Додано сортування
+    public List<Task> getTasksSortedByDate() {
+        return tasks.stream()
+                .sorted(Comparator.comparing(Task::getDueDate))
+                .toList();
+    }
+
+    public List<Task> getTasksSortedByTitle() {
+        return tasks.stream()
+                .sorted(Comparator.comparing(Task::getTitle))
+                .toList();
     }
 }

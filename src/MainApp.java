@@ -9,25 +9,29 @@ public class MainApp {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public static void main(String[] args) {
-
         while (true) {
             System.out.println("\nМеню:");
             System.out.println("1. Створити завдання");
             System.out.println("2. Видалити завдання");
             System.out.println("3. Зчитати всі завдання");
             System.out.println("4. Оновити завдання");
-            System.out.println("5. Вихід");
+            System.out.println("5. Повторити вивід завдань");
+            System.out.println("6. Сортувати за датою");
+            System.out.println("7. Сортувати за назвою");
+            System.out.println("8. Вихід");
             System.out.print("Виберіть опцію: ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // очистка
+            scanner.nextLine(); // очищення вводу
 
             switch (choice) {
                 case 1 -> createTask();
                 case 2 -> deleteTask();
-                case 3 -> readTasks();
+                case 3, 5 -> readTasks();
                 case 4 -> updateTask();
-                case 5 -> {
+                case 6 -> sortByDate();
+                case 7 -> sortByTitle();
+                case 8 -> {
                     System.out.println("Вихід...");
                     return;
                 }
@@ -97,6 +101,22 @@ public class MainApp {
             System.out.println("Завдання оновлено.");
         } else {
             System.out.println("Завдання не знайдено.");
+        }
+    }
+
+    private static void sortByDate() {
+        System.out.println("Сортування за датою:");
+        var sortedTasks = taskManager.getTasksSortedByDate();
+        for (Task task : sortedTasks) {
+            System.out.println(task);
+        }
+    }
+
+    private static void sortByTitle() {
+        System.out.println("Сортування за назвою:");
+        var sortedTasks = taskManager.getTasksSortedByTitle();
+        for (Task task : sortedTasks) {
+            System.out.println(task);
         }
     }
 }
