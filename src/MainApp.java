@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -18,7 +19,9 @@ public class MainApp {
             System.out.println("5. Повторити вивід завдань");
             System.out.println("6. Сортувати за датою");
             System.out.println("7. Сортувати за назвою");
-            System.out.println("8. Вихід");
+            System.out.println("8. Пошук за назвою");
+            System.out.println("9. Пошук за датою");
+            System.out.println("10. Вихід");
             System.out.print("Виберіть опцію: ");
 
             int choice = scanner.nextInt();
@@ -31,7 +34,9 @@ public class MainApp {
                 case 4 -> updateTask();
                 case 6 -> sortByDate();
                 case 7 -> sortByTitle();
-                case 8 -> {
+                case 8 -> searchByTitle();
+                case 9 -> searchByDate();
+                case 10 -> {
                     System.out.println("Вихід...");
                     return;
                 }
@@ -117,6 +122,37 @@ public class MainApp {
         var sortedTasks = taskManager.getTasksSortedByTitle();
         for (Task task : sortedTasks) {
             System.out.println(task);
+        }
+    }
+
+    private static void searchByTitle() {
+        System.out.print("Введіть слово для пошуку в назві: ");
+        String keyword = scanner.nextLine();
+
+        var results = taskManager.searchByTitle(keyword);
+        if (results.isEmpty()) {
+            System.out.println("Нічого не знайдено.");
+        } else {
+            System.out.println("Результати пошуку:");
+            results.forEach(System.out::println);
+        }
+    }
+
+    private static void searchByDate() {
+        System.out.print("Введіть дату для пошуку (yyyy-MM-dd): ");
+        String dateStr = scanner.nextLine();
+
+        try {
+            var date = LocalDate.parse(dateStr);
+            var results = taskManager.searchByDate(date);
+            if (results.isEmpty()) {
+                System.out.println("Завдань на цю дату не знайдено.");
+            } else {
+                System.out.println("Знайдені завдання:");
+                results.forEach(System.out::println);
+            }
+        } catch (Exception e) {
+            System.out.println("Невірний формат дати.");
         }
     }
 }

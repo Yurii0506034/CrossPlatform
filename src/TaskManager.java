@@ -1,6 +1,8 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaskManager {
     private final List<Task> tasks = new ArrayList<>();
@@ -36,7 +38,6 @@ public class TaskManager {
         return false;
     }
 
-    // 🔽 Додано сортування
     public List<Task> getTasksSortedByDate() {
         return tasks.stream()
                 .sorted(Comparator.comparing(Task::getDueDate))
@@ -46,6 +47,20 @@ public class TaskManager {
     public List<Task> getTasksSortedByTitle() {
         return tasks.stream()
                 .sorted(Comparator.comparing(Task::getTitle))
+                .toList();
+    }
+
+    // 🔍 Пошук за назвою
+    public List<Task> searchByTitle(String keyword) {
+        return tasks.stream()
+                .filter(task -> task.getTitle().toLowerCase().contains(keyword.toLowerCase()))
+                .toList();
+    }
+
+    // 🔍 Пошук за датою (без часу)
+    public List<Task> searchByDate(LocalDate date) {
+        return tasks.stream()
+                .filter(task -> task.getDueDate().toLocalDate().equals(date))
                 .toList();
     }
 }
